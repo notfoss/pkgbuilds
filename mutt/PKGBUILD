@@ -1,3 +1,7 @@
+# Borrowed from the Arch Linux ABS.
+# Contributors: tobias [tobias [at] archlinux.org], Gaetan Bisson <bisson@archlinux.org>
+# Maintainer: static DOT vortex AT gmx.com
+
 # Features:
 
 # * Ignore Thread patch: http://ben.at.tanjero.com/patches/ignore-thread-1.5.20.patch
