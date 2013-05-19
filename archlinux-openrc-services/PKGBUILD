@@ -1,3 +1,5 @@
+# Maintainer: static DOT vortex AT gmx.com
+
 pkgname=archlinux-openrc-services-git
 _gitname="archlinux-openrc-services"
 pkgver=44.4b0206e
