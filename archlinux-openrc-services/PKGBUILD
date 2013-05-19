@@ -1,0 +1,22 @@
+pkgname=archlinux-openrc-services-git
+_gitname="archlinux-openrc-services"
+pkgver=44.4b0206e
+pkgrel=1
+pkgdesc="OpenRC service files for Arch Linux"
+arch=('i686' 'x86_64')
+url="https://github.com/notfoss/archlinux-openrc-services"
+license=('GPL2')
+makedepends=('git')
+source=("git://github.com/notfoss/archlinux-openrc-services.git")
+md5sums=('SKIP')
+
+pkgver() {
+    cd "$_gitname"
+    # use the total number of commits + SHA-1 (first 7 characters) of the last commit
+    echo $(git rev-list --count HEAD).$(git rev-parse --short HEAD)
+}
+
+package() {
+    cd "$_gitname"
+    make DESTDIR="$pkgdir" install
+}
