@@ -31,39 +31,39 @@ groups=("custom_packages")
 install=install
 
 build() {
-	cd "${srcdir}/${pkgname}-${pkgver}"
+    cd "${srcdir}/${pkgname}-${pkgver}"
 
     patch -p1 -i "${srcdir}/ignore-thread-1.5.20.patch"
 
-	patch -p1 -i "${srcdir}/crypt-gpgme.patch" # FS#31735
+    patch -p1 -i "${srcdir}/crypt-gpgme.patch" # FS#31735
 
-	./configure \
-		--prefix=/usr \
-		--sysconfdir=/etc \
-		--enable-gpgme \
-		--disable-pop \
-		--disable-imap \
-		--disable-smtp \
-		--enable-hcache \
-		--with-curses=/usr \
-		--with-regex \
-		--without-gss \
-		--without-ssl \
-		--without-sasl \
-		--without-idn \
+    ./configure \
+        --prefix=/usr \
+        --sysconfdir=/etc \
+        --enable-gpgme \
+        --disable-pop \
+        --disable-imap \
+        --disable-smtp \
+        --enable-hcache \
+        --with-curses=/usr \
+        --with-regex \
+        --without-gss \
+        --without-ssl \
+        --without-sasl \
+        --without-idn \
         --without-gdbm \
         --without-qdbm \
         --with-bdb=/usr \
 
-	make
+    make
 }
 
 package() {
-	cd "${srcdir}/${pkgname}-${pkgver}"
-	make DESTDIR="${pkgdir}" install
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    make DESTDIR="${pkgdir}" install
 
-	rm "${pkgdir}"/usr/bin/{flea,muttbug}
-	rm "${pkgdir}"/usr/share/man/man1/{flea,muttbug}.1
-	rm "${pkgdir}"/etc/mime.types{,.dist}
-	install -Dm644 contrib/gpg.rc "${pkgdir}"/etc/Muttrc.gpg.dist
+    rm "${pkgdir}"/usr/bin/{flea,muttbug}
+    rm "${pkgdir}"/usr/share/man/man1/{flea,muttbug}.1
+    rm "${pkgdir}"/etc/mime.types{,.dist}
+    install -Dm644 contrib/gpg.rc "${pkgdir}"/etc/Muttrc.gpg.dist
 }
