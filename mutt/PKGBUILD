@@ -10,8 +10,8 @@
 # * Stripped other unnecessary features, see ./configure below.
 
 pkgname="mutt"
-pkgver="1.5.21"
-pkgrel="9"
+pkgver="1.5.22"
+pkgrel="1"
 pkgdesc="Small but very powerful text-based mail client"
 url="http://www.mutt.org/"
 license=("GPL")
@@ -20,22 +20,18 @@ arch=("i686" "x86_64")
 optdepends=("smtp-forwarder: to send mail")
 depends=("gpgme" "ncurses" "db" "mime-types")
 source=("ftp://ftp.mutt.org/mutt/devel/${pkgname}-${pkgver}.tar.gz"
-        "ignore-thread-1.5.20.patch"
-        "crypt-gpgme.patch")
-sha1sums=("a8475f2618ce5d5d33bff85c0affdf21ab1d76b9"
-          "c5597bb6bd4d0995e396bb45a2489702f2ce43d2"
-          "8cf0d4278aab1d162ab7f847f1b917327d630d98")
+        "ignore-thread-1.5.20.patch")
+sha1sums=("728a114cb3a44df373dbf1292fc34dd8321057dc"
+          "c5597bb6bd4d0995e396bb45a2489702f2ce43d2")
 
 groups=("custom_packages")
 
 install="install"
 
 build() {
-    cd "$srcdir/${pkgname}-${pkgver}"
+    cd "${srcdir}/${pkgname}-${pkgver}"
 
-    patch -p1 -i "$srcdir"/ignore-thread-1.5.20.patch
-
-    patch -p1 -i "$srcdir"/crypt-gpgme.patch # FS#31735
+    patch -p1 -i "${srcdir}"/ignore-thread-1.5.20.patch
 
     ./configure \
         --prefix=/usr \
@@ -59,11 +55,11 @@ build() {
 }
 
 package() {
-    cd "$srcdir/${pkgname}-${pkgver}"
-    make DESTDIR="$pkgdir" install
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    make DESTDIR="${pkgdir}" install
 
-    rm "$pkgdir"/usr/bin/{flea,muttbug}
-    rm "$pkgdir"/usr/share/man/man1/{flea,muttbug}.1
-    rm "$pkgdir"/etc/mime.types{,.dist}
-    install -Dm644 contrib/gpg.rc "$pkgdir"/etc/Muttrc.gpg.dist
+    rm "${pkgdir}"/etc/mime.types{,.dist}
+    rm "${pkgdir}"/usr/bin/{flea,muttbug}
+    rm "${pkgdir}"/usr/share/man/man1/{flea,muttbug}.1
+    install -Dm644 contrib/gpg.rc "${pkgdir}"/etc/Muttrc.gpg.dist
 }
