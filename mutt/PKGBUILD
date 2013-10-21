@@ -4,7 +4,7 @@
 
 # Features:
 
-# * Ignore Thread patch: http://ben.at.tanjero.com/patches/ignore-thread-1.5.20.patch
+# * Ignore Thread patch: http://ben.at.tanjero.com/patches/ignore-thread-1.5.21.patch
 # * Uses berkeley db instead of gdbm.
 # * Email sending and retrieving functionality has been stripped. I use msmtp and offlineimap for that.
 # * Stripped other unnecessary features, see ./configure below.
