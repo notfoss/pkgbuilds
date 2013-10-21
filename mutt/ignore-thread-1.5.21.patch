@@ -1,15 +1,15 @@
-diff -r -p -u mutt-1.5.20/OPS mutt-1.5.20.patched/OPS
---- mutt-1.5.20/OPS	2009-05-13 01:01:13.000000000 -0400
-+++ mutt-1.5.20.patched/OPS	2009-07-23 16:41:04.000000000 -0400
-@@ -178,3 +178,4 @@ OP_WHAT_KEY "display the keycode for a k
+diff -ru mutt-1.5.21.orig/OPS mutt-1.5.21/OPS
+--- mutt-1.5.21.orig/OPS	2010-03-01 12:56:19.000000000 -0500
++++ mutt-1.5.21/OPS	2011-07-10 14:59:03.000000000 -0400
+@@ -179,3 +179,4 @@
  OP_MAIN_SHOW_LIMIT "show currently active limit pattern"
  OP_MAIN_COLLAPSE_THREAD "collapse/uncollapse current thread"
  OP_MAIN_COLLAPSE_ALL "collapse/uncollapse all threads"
 +OP_MAIN_IGNORE_THREAD "toggle a message's 'ignore-thread' flag"
-diff -r -p -u mutt-1.5.20/copy.c mutt-1.5.20.patched/copy.c
---- mutt-1.5.20/copy.c	2009-06-12 19:38:52.000000000 -0400
-+++ mutt-1.5.20.patched/copy.c	2009-07-23 16:49:06.000000000 -0400
-@@ -393,7 +393,7 @@ mutt_copy_header (FILE *in, HEADER *h, F
+diff -ru mutt-1.5.21.orig/copy.c mutt-1.5.21/copy.c
+--- mutt-1.5.21.orig/copy.c	2010-03-02 14:15:00.000000000 -0500
++++ mutt-1.5.21/copy.c	2011-07-10 14:59:03.000000000 -0400
+@@ -393,7 +393,7 @@
        fputc ('\n', out);
      }
  
@@ -18,7 +18,7 @@ diff -r -p -u mutt-1.5.20/copy.c mutt-1.5.20.patched/copy.c
      {
        fputs ("X-Status: ", out);
        if (h->replied)
-@@ -404,6 +404,11 @@ mutt_copy_header (FILE *in, HEADER *h, F
+@@ -404,6 +404,11 @@
      }
    }
  
@@ -30,12 +30,10 @@ diff -r -p -u mutt-1.5.20/copy.c mutt-1.5.20.patched/copy.c
    if (flags & CH_UPDATE_LEN &&
        (flags & CH_NOLEN) == 0)
    {
-Only in mutt-1.5.20.patched: copy.c.orig
-Only in mutt-1.5.20.patched: copy.c.rej
-diff -r -p -u mutt-1.5.20/curs_main.c mutt-1.5.20.patched/curs_main.c
---- mutt-1.5.20/curs_main.c	2009-06-13 22:48:36.000000000 -0400
-+++ mutt-1.5.20.patched/curs_main.c	2009-07-23 16:50:31.000000000 -0400
-@@ -321,6 +321,7 @@ static void update_index (MUTTMENU *menu
+diff -ru mutt-1.5.21.orig/curs_main.c mutt-1.5.21/curs_main.c
+--- mutt-1.5.21.orig/curs_main.c	2010-09-13 13:19:55.000000000 -0400
++++ mutt-1.5.21/curs_main.c	2011-07-10 14:59:03.000000000 -0400
+@@ -321,6 +321,7 @@
    mutt_sort_headers (ctx, (check == M_REOPENED));
  
    /* uncollapse threads with new mail */
@@ -43,7 +41,7 @@ diff -r -p -u mutt-1.5.20/curs_main.c mutt-1.5.20.patched/curs_main.c
    if ((Sort & SORT_MASK) == SORT_THREADS)
    {
      if (check == M_REOPENED)
-@@ -333,7 +334,8 @@ static void update_index (MUTTMENU *menu
+@@ -333,7 +334,8 @@
        {
  	for (j = h; !j->message; j = j->child)
  	  ;
@@ -53,7 +51,7 @@ diff -r -p -u mutt-1.5.20/curs_main.c mutt-1.5.20.patched/curs_main.c
        }
        mutt_set_virtual (ctx);
      }
-@@ -346,7 +348,8 @@ static void update_index (MUTTMENU *menu
+@@ -346,7 +348,8 @@
  	for (k = 0; k < ctx->msgcount; k++)
  	{
  	  HEADER *h = ctx->hdrs[k];
@@ -63,7 +61,7 @@ diff -r -p -u mutt-1.5.20/curs_main.c mutt-1.5.20.patched/curs_main.c
  	    mutt_uncollapse_thread (ctx, h);
  	}
        }
-@@ -420,6 +423,7 @@ int mutt_index_menu (void)
+@@ -420,6 +423,7 @@
  {
    char buf[LONG_STRING], helpstr[LONG_STRING];
    int op = OP_NULL;
@@ -71,7 +69,7 @@ diff -r -p -u mutt-1.5.20/curs_main.c mutt-1.5.20.patched/curs_main.c
    int done = 0;                /* controls when to exit the "event" loop */
    int i = 0, j;
    int tag = 0;                 /* has the tag-prefix command been pressed? */
-@@ -1170,13 +1174,15 @@ int mutt_index_menu (void)
+@@ -1188,13 +1192,15 @@
  
  	unset_option (OPTNEEDRESORT);
  
@@ -88,7 +86,7 @@ diff -r -p -u mutt-1.5.20/curs_main.c mutt-1.5.20.patched/curs_main.c
  
  	if (option (OPTPGPAUTODEC) && (tag || !(CURHDR->security & PGP_TRADITIONAL_CHECKED)))
  	  mutt_check_traditional_pgp (tag ? NULL : CURHDR, &menu->redraw);
-@@ -1466,10 +1472,14 @@ int mutt_index_menu (void)
+@@ -1486,10 +1492,14 @@
  
  	  if (CURHDRi->collapsed && (Sort & SORT_MASK) == SORT_THREADS)
  	  {
@@ -107,7 +105,7 @@ diff -r -p -u mutt-1.5.20/curs_main.c mutt-1.5.20.patched/curs_main.c
  	  }
  	  else if ((!CURHDRi->deleted && !CURHDRi->read))
  	  {
-@@ -1718,6 +1728,51 @@ int mutt_index_menu (void)
+@@ -1738,6 +1748,51 @@
  	  break;
  	}
  
@@ -159,7 +157,7 @@ diff -r -p -u mutt-1.5.20/curs_main.c mutt-1.5.20.patched/curs_main.c
  	menu->redraw = REDRAW_INDEX | REDRAW_STATUS;
  
         break;
-@@ -1732,6 +1787,12 @@ int mutt_index_menu (void)
+@@ -1752,6 +1807,12 @@
  	  break;
  	}
  
@@ -172,7 +170,7 @@ diff -r -p -u mutt-1.5.20/curs_main.c mutt-1.5.20.patched/curs_main.c
          {
  	  HEADER *h, *base;
  	  THREAD *thread, *top;
-@@ -1757,7 +1818,10 @@ int mutt_index_menu (void)
+@@ -1777,7 +1838,10 @@
  	    if (h->collapsed != Context->collapsed)
  	    {
  	      if (h->collapsed)
@@ -184,12 +182,10 @@ diff -r -p -u mutt-1.5.20/curs_main.c mutt-1.5.20.patched/curs_main.c
  	      else if (option (OPTCOLLAPSEUNREAD) || !UNREAD (h))
  		mutt_collapse_thread (Context, h);
  	    }
-Only in mutt-1.5.20.patched: curs_main.c.orig
-Only in mutt-1.5.20.patched: curs_main.c.rej
-diff -r -p -u mutt-1.5.20/flags.c mutt-1.5.20.patched/flags.c
---- mutt-1.5.20/flags.c	2008-12-16 22:50:09.000000000 -0500
-+++ mutt-1.5.20.patched/flags.c	2009-07-23 16:41:04.000000000 -0400
-@@ -252,6 +252,30 @@ void _mutt_set_flag (CONTEXT *ctx, HEADE
+diff -ru mutt-1.5.21.orig/flags.c mutt-1.5.21/flags.c
+--- mutt-1.5.21.orig/flags.c	2009-01-03 18:27:10.000000000 -0500
++++ mutt-1.5.21/flags.c	2011-07-10 14:59:03.000000000 -0400
+@@ -252,6 +252,30 @@
  	if (upd_ctx) ctx->tagged--;
        }
        break;
@@ -220,11 +216,10 @@ diff -r -p -u mutt-1.5.20/flags.c mutt-1.5.20.patched/flags.c
    }
  
    if (update)
-Only in mutt-1.5.20.patched: flags.c.orig
-diff -r -p -u mutt-1.5.20/functions.h mutt-1.5.20.patched/functions.h
---- mutt-1.5.20/functions.h	2009-04-30 01:36:17.000000000 -0400
-+++ mutt-1.5.20.patched/functions.h	2009-07-23 16:41:04.000000000 -0400
-@@ -166,6 +166,7 @@ struct binding_t OpMain[] = { /* map: in
+diff -ru mutt-1.5.21.orig/functions.h mutt-1.5.21/functions.h
+--- mutt-1.5.21.orig/functions.h	2010-08-24 12:34:21.000000000 -0400
++++ mutt-1.5.21/functions.h	2011-07-10 14:59:03.000000000 -0400
+@@ -167,6 +167,7 @@
    { "mail-key",			OP_MAIL_KEY,			"\033k" },
    { "decrypt-copy",		OP_DECRYPT_COPY,		NULL },
    { "decrypt-save",		OP_DECRYPT_SAVE,		NULL },
@@ -232,7 +227,7 @@ diff -r -p -u mutt-1.5.20/functions.h mutt-1.5.20.patched/functions.h
  
  
    { NULL,			0,				NULL }
-@@ -209,6 +210,8 @@ struct binding_t OpPager[] = { /* map: p
+@@ -213,6 +214,8 @@
    { "print-message",	OP_PRINT,			"p" },
    { "previous-thread",	OP_MAIN_PREV_THREAD,		"\020" },
    { "previous-subthread",OP_MAIN_PREV_SUBTHREAD,	"\033p" },
@@ -241,11 +236,10 @@ diff -r -p -u mutt-1.5.20/functions.h mutt-1.5.20.patched/functions.h
    { "quit",		OP_QUIT,			"Q" },
    { "exit",		OP_EXIT,			"q" },
    { "reply",		OP_REPLY,			"r" },
-Only in mutt-1.5.20.patched: functions.h.orig
-diff -r -p -u mutt-1.5.20/hdrline.c mutt-1.5.20.patched/hdrline.c
---- mutt-1.5.20/hdrline.c	2009-04-13 12:24:55.000000000 -0400
-+++ mutt-1.5.20.patched/hdrline.c	2009-07-23 16:41:04.000000000 -0400
-@@ -252,6 +252,8 @@ hdr_format_str (char *dest,
+diff -ru mutt-1.5.21.orig/hdrline.c mutt-1.5.21/hdrline.c
+--- mutt-1.5.21.orig/hdrline.c	2009-04-10 19:45:19.000000000 -0400
++++ mutt-1.5.21/hdrline.c	2011-07-10 14:59:03.000000000 -0400
+@@ -252,6 +252,8 @@
    int is_index = (flags & M_FORMAT_INDEX);
  #define THREAD_NEW (threads && hdr->collapsed && hdr->num_hidden > 1 && mutt_thread_contains_unread (ctx, hdr) == 1)
  #define THREAD_OLD (threads && hdr->collapsed && hdr->num_hidden > 1 && mutt_thread_contains_unread (ctx, hdr) == 2)
@@ -254,7 +248,7 @@ diff -r -p -u mutt-1.5.20/hdrline.c mutt-1.5.20.patched/hdrline.c
    size_t len;
  
    hdr = hfi->hdr;
-@@ -574,6 +576,11 @@ hdr_format_str (char *dest,
+@@ -574,6 +576,11 @@
  	ch = '*';
        else if (hdr->flagged)
  	ch = '!';
@@ -266,7 +260,7 @@ diff -r -p -u mutt-1.5.20/hdrline.c mutt-1.5.20.patched/hdrline.c
        else if (hdr->replied)
  	ch = 'r';
        else if (hdr->read && (ctx && ctx->msgnotreadyet != hdr->msgno))
-@@ -651,9 +658,12 @@ hdr_format_str (char *dest,
+@@ -651,9 +658,12 @@
          ch = 'K';
  
        snprintf (buf2, sizeof (buf2),
@@ -281,7 +275,7 @@ diff -r -p -u mutt-1.5.20/hdrline.c mutt-1.5.20.patched/hdrline.c
  		hdr->deleted ? 'D' : (hdr->attach_del ? 'd' : ch),
  		hdr->tagged ? '*' :
  		(hdr->flagged ? '!' :
-@@ -724,6 +734,8 @@ hdr_format_str (char *dest,
+@@ -724,6 +734,8 @@
    return (src);
  #undef THREAD_NEW
  #undef THREAD_OLD
@@ -290,11 +284,10 @@ diff -r -p -u mutt-1.5.20/hdrline.c mutt-1.5.20.patched/hdrline.c
  }
  
  void
-Only in mutt-1.5.20.patched: hdrline.c.orig
-diff -r -p -u mutt-1.5.20/imap/imap.c mutt-1.5.20.patched/imap/imap.c
---- mutt-1.5.20/imap/imap.c	2009-06-14 13:19:16.000000000 -0400
-+++ mutt-1.5.20.patched/imap/imap.c	2009-07-23 16:51:17.000000000 -0400
-@@ -897,6 +897,9 @@ static int imap_make_msg_set (IMAP_DATA*
+diff -ru mutt-1.5.21.orig/imap/imap.c mutt-1.5.21/imap/imap.c
+--- mutt-1.5.21.orig/imap/imap.c	2009-08-25 15:08:52.000000000 -0400
++++ mutt-1.5.21/imap/imap.c	2011-07-10 14:59:11.000000000 -0400
+@@ -897,6 +897,9 @@
            if (hdrs[n]->flagged != HEADER_DATA(hdrs[n])->flagged)
              match = invert ^ hdrs[n]->flagged;
  	  break;
@@ -304,7 +297,7 @@ diff -r -p -u mutt-1.5.20/imap/imap.c mutt-1.5.20.patched/imap/imap.c
          case M_OLD:
            if (hdrs[n]->old != HEADER_DATA(hdrs[n])->old)
              match = invert ^ hdrs[n]->old;
-@@ -1039,6 +1042,8 @@ static int compare_flags (HEADER* h)
+@@ -1039,6 +1042,8 @@
      return 1;
    if (h->deleted != hd->deleted)
      return 1;
@@ -313,7 +306,7 @@ diff -r -p -u mutt-1.5.20/imap/imap.c mutt-1.5.20.patched/imap/imap.c
  
    return 0;
  }
-@@ -1071,6 +1076,8 @@ int imap_sync_message (IMAP_DATA *idata,
+@@ -1071,6 +1076,8 @@
                   "Old ", flags, sizeof (flags));
    imap_set_flag (idata, M_ACL_WRITE, hdr->flagged,
  		 "\\Flagged ", flags, sizeof (flags));
@@ -322,7 +315,7 @@ diff -r -p -u mutt-1.5.20/imap/imap.c mutt-1.5.20.patched/imap/imap.c
    imap_set_flag (idata, M_ACL_WRITE, hdr->replied,
  		 "\\Answered ", flags, sizeof (flags));
    imap_set_flag (idata, M_ACL_DELETE, hdr->deleted,
-@@ -1089,6 +1096,8 @@ int imap_sync_message (IMAP_DATA *idata,
+@@ -1089,6 +1096,8 @@
      imap_set_flag (idata, M_ACL_SEEN, 1, "\\Seen ", flags, sizeof (flags));
      imap_set_flag (idata, M_ACL_WRITE, 1, "Old ", flags, sizeof (flags));
      imap_set_flag (idata, M_ACL_WRITE, 1, "\\Flagged ", flags, sizeof (flags));
@@ -331,7 +324,7 @@ diff -r -p -u mutt-1.5.20/imap/imap.c mutt-1.5.20.patched/imap/imap.c
      imap_set_flag (idata, M_ACL_WRITE, 1, "\\Answered ", flags, sizeof (flags));
      imap_set_flag (idata, M_ACL_DELETE, 1, "\\Deleted ", flags, sizeof (flags));
  
-@@ -1264,6 +1273,7 @@ int imap_sync_mailbox (CONTEXT* ctx, int
+@@ -1264,6 +1273,7 @@
    rc += sync_helper (idata, M_ACL_WRITE, M_OLD, "Old");
    rc += sync_helper (idata, M_ACL_SEEN, M_READ, "\\Seen");
    rc += sync_helper (idata, M_ACL_WRITE, M_REPLIED, "\\Answered");
@@ -339,12 +332,10 @@ diff -r -p -u mutt-1.5.20/imap/imap.c mutt-1.5.20.patched/imap/imap.c
  
    if (oldsort != Sort)
    {
-Only in mutt-1.5.20.patched/imap: imap.c.orig
-Only in mutt-1.5.20.patched/imap: imap.c.rej
-diff -r -p -u mutt-1.5.20/imap/message.c mutt-1.5.20.patched/imap/message.c
---- mutt-1.5.20/imap/message.c	2009-06-07 13:52:57.000000000 -0400
-+++ mutt-1.5.20.patched/imap/message.c	2009-07-23 16:41:04.000000000 -0400
-@@ -196,6 +196,7 @@ int imap_read_headers (IMAP_DATA* idata,
+diff -ru mutt-1.5.21.orig/imap/message.c mutt-1.5.21/imap/message.c
+--- mutt-1.5.21.orig/imap/message.c	2010-08-24 12:34:21.000000000 -0400
++++ mutt-1.5.21/imap/message.c	2011-07-10 14:59:14.000000000 -0400
+@@ -197,6 +197,7 @@
            ctx->hdrs[idx]->old = h.data->old;
            ctx->hdrs[idx]->deleted = h.data->deleted;
            ctx->hdrs[idx]->flagged = h.data->flagged;
@@ -352,7 +343,7 @@ diff -r -p -u mutt-1.5.20/imap/message.c mutt-1.5.20.patched/imap/message.c
            ctx->hdrs[idx]->replied = h.data->replied;
            ctx->hdrs[idx]->changed = h.data->changed;
            /*  ctx->hdrs[msgno]->received is restored from mutt_hcache_restore */
-@@ -305,6 +306,7 @@ int imap_read_headers (IMAP_DATA* idata,
+@@ -305,6 +306,7 @@
        ctx->hdrs[idx]->old = h.data->old;
        ctx->hdrs[idx]->deleted = h.data->deleted;
        ctx->hdrs[idx]->flagged = h.data->flagged;
@@ -360,7 +351,7 @@ diff -r -p -u mutt-1.5.20/imap/message.c mutt-1.5.20.patched/imap/message.c
        ctx->hdrs[idx]->replied = h.data->replied;
        ctx->hdrs[idx]->changed = h.data->changed;
        ctx->hdrs[idx]->received = h.received;
-@@ -1043,6 +1045,7 @@ char* imap_set_flags (IMAP_DATA* idata, 
+@@ -1052,6 +1054,7 @@
    mutt_set_flag (ctx, h, M_READ, hd->read);
    mutt_set_flag (ctx, h, M_DELETE, hd->deleted);
    mutt_set_flag (ctx, h, M_FLAG, hd->flagged);
@@ -368,7 +359,7 @@ diff -r -p -u mutt-1.5.20/imap/message.c mutt-1.5.20.patched/imap/message.c
    mutt_set_flag (ctx, h, M_REPLIED, hd->replied);
  
    /* this message is now definitively *not* changed (mutt_set_flag
-@@ -1212,7 +1215,7 @@ static char* msg_parse_flags (IMAP_HEADE
+@@ -1221,7 +1224,7 @@
    s++;
  
    mutt_free_list (&hd->keywords);
@@ -377,7 +368,7 @@ diff -r -p -u mutt-1.5.20/imap/message.c mutt-1.5.20.patched/imap/message.c
  
    /* start parsing */
    while (*s && *s != ')')
-@@ -1227,6 +1230,11 @@ static char* msg_parse_flags (IMAP_HEADE
+@@ -1236,6 +1239,11 @@
        s += 8;
        hd->flagged = 1;
      }
@@ -389,11 +380,10 @@ diff -r -p -u mutt-1.5.20/imap/message.c mutt-1.5.20.patched/imap/message.c
      else if (ascii_strncasecmp ("\\answered", s, 9) == 0)
      {
        s += 9;
-Only in mutt-1.5.20.patched/imap: message.c.orig
-diff -r -p -u mutt-1.5.20/imap/message.h mutt-1.5.20.patched/imap/message.h
---- mutt-1.5.20/imap/message.h	2009-01-04 17:27:34.000000000 -0500
-+++ mutt-1.5.20.patched/imap/message.h	2009-07-23 16:41:04.000000000 -0400
-@@ -33,6 +33,7 @@ typedef struct imap_header_data
+diff -ru mutt-1.5.21.orig/imap/message.h mutt-1.5.21/imap/message.h
+--- mutt-1.5.21.orig/imap/message.h	2009-01-05 14:20:53.000000000 -0500
++++ mutt-1.5.21/imap/message.h	2011-07-10 14:59:16.000000000 -0400
+@@ -33,6 +33,7 @@
    unsigned int flagged : 1;
    unsigned int replied : 1;
    unsigned int changed : 1;
@@ -401,9 +391,9 @@ diff -r -p -u mutt-1.5.20/imap/message.h mutt-1.5.20.patched/imap/message.h
  
    unsigned int parsed : 1;
  
-diff -r -p -u mutt-1.5.20/mailbox.h mutt-1.5.20.patched/mailbox.h
---- mutt-1.5.20/mailbox.h	2009-04-30 01:36:17.000000000 -0400
-+++ mutt-1.5.20.patched/mailbox.h	2009-07-23 16:41:04.000000000 -0400
+diff -ru mutt-1.5.21.orig/mailbox.h mutt-1.5.21/mailbox.h
+--- mutt-1.5.21.orig/mailbox.h	2009-04-30 13:33:48.000000000 -0400
++++ mutt-1.5.21/mailbox.h	2011-07-10 14:59:16.000000000 -0400
 @@ -28,6 +28,9 @@
  				* safe_fopen() for mbox-style folders.
  				*/
@@ -414,10 +404,10 @@ diff -r -p -u mutt-1.5.20/mailbox.h mutt-1.5.20.patched/mailbox.h
  /* mx_open_new_message() */
  #define M_ADD_FROM	1	/* add a From_ line */
  
-diff -r -p -u mutt-1.5.20/mbox.c mutt-1.5.20.patched/mbox.c
---- mutt-1.5.20/mbox.c	2009-06-11 00:29:41.000000000 -0400
-+++ mutt-1.5.20.patched/mbox.c	2009-07-23 16:41:04.000000000 -0400
-@@ -1198,6 +1198,7 @@ int mutt_reopen_mailbox (CONTEXT *ctx, i
+diff -ru mutt-1.5.21.orig/mbox.c mutt-1.5.21/mbox.c
+--- mutt-1.5.21.orig/mbox.c	2010-09-13 13:19:55.000000000 -0400
++++ mutt-1.5.21/mbox.c	2011-07-10 14:59:16.000000000 -0400
+@@ -1220,6 +1220,7 @@
  	   */
  	  mutt_set_flag (ctx, ctx->hdrs[i], M_FLAG, old_hdrs[j]->flagged);
  	  mutt_set_flag (ctx, ctx->hdrs[i], M_REPLIED, old_hdrs[j]->replied);
@@ -425,11 +415,10 @@ diff -r -p -u mutt-1.5.20/mbox.c mutt-1.5.20.patched/mbox.c
  	  mutt_set_flag (ctx, ctx->hdrs[i], M_OLD, old_hdrs[j]->old);
  	  mutt_set_flag (ctx, ctx->hdrs[i], M_READ, old_hdrs[j]->read);
  	}
-Only in mutt-1.5.20.patched: mbox.c.orig
-diff -r -p -u mutt-1.5.20/mutt.h mutt-1.5.20.patched/mutt.h
---- mutt-1.5.20/mutt.h	2009-06-12 18:15:42.000000000 -0400
-+++ mutt-1.5.20.patched/mutt.h	2009-07-23 16:41:04.000000000 -0400
-@@ -168,6 +168,9 @@ typedef enum
+diff -ru mutt-1.5.21.orig/mutt.h mutt-1.5.21/mutt.h
+--- mutt-1.5.21.orig/mutt.h	2010-09-13 13:19:55.000000000 -0400
++++ mutt-1.5.21/mutt.h	2011-07-10 14:59:16.000000000 -0400
+@@ -168,6 +168,9 @@
  #define M_THREAD_GET_HIDDEN	(1<<2)
  #define M_THREAD_UNREAD		(1<<3)
  #define M_THREAD_NEXT_UNREAD	(1<<4)
@@ -439,7 +428,7 @@ diff -r -p -u mutt-1.5.20/mutt.h mutt-1.5.20.patched/mutt.h
  
  enum
  {
-@@ -193,6 +196,7 @@ enum
+@@ -193,6 +196,7 @@
    M_LIMIT,
    M_EXPIRED,
    M_SUPERSEDED,
@@ -447,7 +436,7 @@ diff -r -p -u mutt-1.5.20/mutt.h mutt-1.5.20.patched/mutt.h
  
    /* actions for mutt_pattern_comp/mutt_pattern_exec */
    M_AND,
-@@ -734,6 +738,7 @@ typedef struct header
+@@ -739,6 +743,7 @@
    /* the following are used to support collapsing threads  */
    unsigned int collapsed : 1; 	/* is this message part of a collapsed thread? */
    unsigned int limited : 1;   	/* is this message in a limited view?  */
@@ -455,11 +444,10 @@ diff -r -p -u mutt-1.5.20/mutt.h mutt-1.5.20.patched/mutt.h
    size_t num_hidden;          	/* number of hidden messages in this view */
  
    short recipient;		/* user_is_recipient()'s return value, cached */
-Only in mutt-1.5.20.patched: mutt.h.orig
-diff -r -p -u mutt-1.5.20/pager.c mutt-1.5.20.patched/pager.c
---- mutt-1.5.20/pager.c	2009-06-03 16:48:31.000000000 -0400
-+++ mutt-1.5.20.patched/pager.c	2009-07-23 16:41:04.000000000 -0400
-@@ -2261,6 +2261,19 @@ search_next:
+diff -ru mutt-1.5.21.orig/pager.c mutt-1.5.21/pager.c
+--- mutt-1.5.21.orig/pager.c	2010-08-25 12:31:40.000000000 -0400
++++ mutt-1.5.21/pager.c	2011-07-10 14:59:16.000000000 -0400
+@@ -2288,6 +2288,19 @@
  	km_error_key (MENU_PAGER);
  	break;
  
@@ -479,11 +467,10 @@ diff -r -p -u mutt-1.5.20/pager.c mutt-1.5.20.patched/pager.c
  	/* --------------------------------------------------------------------
  	 * The following are operations on the current message rather than
  	 * adjusting the view of the message.
-Only in mutt-1.5.20.patched: pager.c.orig
-diff -r -p -u mutt-1.5.20/parse.c mutt-1.5.20.patched/parse.c
---- mutt-1.5.20/parse.c	2009-06-01 12:29:32.000000000 -0400
-+++ mutt-1.5.20.patched/parse.c	2009-07-23 16:41:04.000000000 -0400
-@@ -1244,6 +1244,9 @@ int mutt_parse_rfc822_line (ENVELOPE *e,
+diff -ru mutt-1.5.21.orig/parse.c mutt-1.5.21/parse.c
+--- mutt-1.5.21.orig/parse.c	2009-08-25 15:08:52.000000000 -0400
++++ mutt-1.5.21/parse.c	2011-07-10 14:59:16.000000000 -0400
+@@ -1244,6 +1244,9 @@
  	    case 'F':
  	    hdr->flagged = 1;
  	    break;
@@ -493,11 +480,10 @@ diff -r -p -u mutt-1.5.20/parse.c mutt-1.5.20.patched/parse.c
  	    default:
  	    break;
  	  }
-Only in mutt-1.5.20.patched: parse.c.orig
-diff -r -p -u mutt-1.5.20/protos.h mutt-1.5.20.patched/protos.h
---- mutt-1.5.20/protos.h	2009-06-12 19:38:52.000000000 -0400
-+++ mutt-1.5.20.patched/protos.h	2009-07-23 16:41:04.000000000 -0400
-@@ -62,6 +62,8 @@ int _mutt_aside_thread (HEADER *, short,
+diff -ru mutt-1.5.21.orig/protos.h mutt-1.5.21/protos.h
+--- mutt-1.5.21.orig/protos.h	2010-08-24 12:34:21.000000000 -0400
++++ mutt-1.5.21/protos.h	2011-07-10 14:59:16.000000000 -0400
+@@ -62,6 +62,8 @@
  #define mutt_get_hidden(x,y)_mutt_traverse_thread (x,y,M_THREAD_GET_HIDDEN) 
  #define mutt_thread_contains_unread(x,y) _mutt_traverse_thread (x,y,M_THREAD_UNREAD)
  #define mutt_thread_next_unread(x,y) _mutt_traverse_thread(x,y,M_THREAD_NEXT_UNREAD)
@@ -506,10 +492,10 @@ diff -r -p -u mutt-1.5.20/protos.h mutt-1.5.20.patched/protos.h
  int _mutt_traverse_thread (CONTEXT *ctx, HEADER *hdr, int flag);
  
  
-diff -r -p -u mutt-1.5.20/sort.c mutt-1.5.20.patched/sort.c
---- mutt-1.5.20/sort.c	2008-11-11 14:55:47.000000000 -0500
-+++ mutt-1.5.20.patched/sort.c	2009-07-23 16:41:04.000000000 -0400
-@@ -321,6 +321,7 @@ void mutt_sort_headers (CONTEXT *ctx, in
+diff -ru mutt-1.5.21.orig/sort.c mutt-1.5.21/sort.c
+--- mutt-1.5.21.orig/sort.c	2008-10-28 18:29:44.000000000 -0400
++++ mutt-1.5.21/sort.c	2011-07-10 14:59:16.000000000 -0400
+@@ -321,6 +321,7 @@
    }
  
    /* re-collapse threads marked as collapsed */
@@ -517,7 +503,7 @@ diff -r -p -u mutt-1.5.20/sort.c mutt-1.5.20.patched/sort.c
    if ((Sort & SORT_MASK) == SORT_THREADS)
    {
      top = ctx->tree;
-@@ -330,7 +331,7 @@ void mutt_sort_headers (CONTEXT *ctx, in
+@@ -330,7 +331,7 @@
  	thread = thread->child;
        h = thread->message;
  
@@ -526,10 +512,10 @@ diff -r -p -u mutt-1.5.20/sort.c mutt-1.5.20.patched/sort.c
  	mutt_collapse_thread (ctx, h);
        top = top->next;
      }
-diff -r -p -u mutt-1.5.20/thread.c mutt-1.5.20.patched/thread.c
---- mutt-1.5.20/thread.c	2009-03-31 02:52:43.000000000 -0400
-+++ mutt-1.5.20.patched/thread.c	2009-07-23 16:41:04.000000000 -0400
-@@ -116,6 +116,69 @@ static void linearize_tree (CONTEXT *ctx
+diff -ru mutt-1.5.21.orig/thread.c mutt-1.5.21/thread.c
+--- mutt-1.5.21.orig/thread.c	2010-08-24 12:34:21.000000000 -0400
++++ mutt-1.5.21/thread.c	2011-07-10 14:59:16.000000000 -0400
+@@ -116,6 +116,69 @@
    }
  }
  
@@ -599,7 +585,7 @@ diff -r -p -u mutt-1.5.20/thread.c mutt-1.5.20.patched/thread.c
  /* this calculates whether a node is the root of a subtree that has visible
   * nodes, whether a node itself is visible, whether, if invisible, it has
   * depth anyway, and whether any of its later siblings are roots of visible
-@@ -971,6 +1034,10 @@ void mutt_sort_threads (CONTEXT *ctx, in
+@@ -971,6 +1034,10 @@
  
      /* Draw the thread tree. */
      mutt_draw_tree (ctx);
@@ -610,7 +596,7 @@ diff -r -p -u mutt-1.5.20/thread.c mutt-1.5.20.patched/thread.c
    }
  }
  
-@@ -1175,6 +1242,13 @@ int _mutt_traverse_thread (CONTEXT *ctx,
+@@ -1178,6 +1245,13 @@
      }
    }
  
@@ -624,7 +610,7 @@ diff -r -p -u mutt-1.5.20/thread.c mutt-1.5.20.patched/thread.c
    if (thread == top && (thread = thread->child) == NULL)
    {
      /* return value depends on action requested */
-@@ -1186,6 +1260,8 @@ int _mutt_traverse_thread (CONTEXT *ctx,
+@@ -1189,6 +1263,8 @@
        return (num_hidden);
      else if (flag & M_THREAD_NEXT_UNREAD)
        return (min_unread);
@@ -633,7 +619,7 @@ diff -r -p -u mutt-1.5.20/thread.c mutt-1.5.20.patched/thread.c
    }
    
    FOREVER
-@@ -1224,6 +1300,13 @@ int _mutt_traverse_thread (CONTEXT *ctx,
+@@ -1227,6 +1303,13 @@
        }
  
  
@@ -647,7 +633,7 @@ diff -r -p -u mutt-1.5.20/thread.c mutt-1.5.20.patched/thread.c
        if (!cur->read && CHECK_LIMIT)
        {
  	if (cur->old)
-@@ -1272,6 +1355,8 @@ int _mutt_traverse_thread (CONTEXT *ctx,
+@@ -1275,6 +1358,8 @@
      return (num_hidden+1);
    else if (flag & M_THREAD_NEXT_UNREAD)
      return (min_unread);

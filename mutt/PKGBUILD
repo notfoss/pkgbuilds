@@ -20,9 +20,9 @@ arch=("i686" "x86_64")
 optdepends=("smtp-forwarder: to send mail")
 depends=("gpgme" "ncurses" "db" "mime-types")
 source=("ftp://ftp.mutt.org/mutt/devel/${pkgname}-${pkgver}.tar.gz"
-        "ignore-thread-1.5.20.patch")
+        "ignore-thread-1.5.21.patch")
 sha1sums=("728a114cb3a44df373dbf1292fc34dd8321057dc"
-          "c5597bb6bd4d0995e396bb45a2489702f2ce43d2")
+          "e414b00fe5b9decfb7644935224b22520128bec7")
 
 groups=("custom_packages")
 
@@ -31,7 +31,7 @@ install="install"
 build() {
     cd "${srcdir}/${pkgname}-${pkgver}"
 
-    patch -p1 -i "${srcdir}"/ignore-thread-1.5.20.patch
+    patch -p1 -i "${srcdir}"/ignore-thread-1.5.21.patch
 
     ./configure \
         --prefix=/usr \
