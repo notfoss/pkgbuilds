@@ -1,13 +1,12 @@
-# Borrowed from the Arch Linux ABS.
 # Maintainer: notfoss <AT> gmx.com
 # Contributors: tobias [tobias [at] archlinux.org], Gaetan Bisson <bisson@archlinux.org>
 
 # Features:
 
-# * Ignore Thread patch: http://ben.at.tanjero.com/patches/ignore-thread-1.5.21.patch
-# * Uses berkeley db instead of gdbm.
+# * Sidebar patch: http://www.lunar-linux.org/mutt-sidebar/
+# * Use berkeley db instead of gdbm.
 # * Email sending and retrieving functionality has been stripped. I use msmtp and offlineimap for that.
-# * Stripped other unnecessary features, see ./configure below.
+# * Remove other unnecessary features, see ./configure below.
 
 pkgname="mutt"
 pkgver="1.5.23"
@@ -19,19 +18,27 @@ backup=("etc/Muttrc")
 arch=("i686" "x86_64")
 optdepends=("smtp-forwarder: to send mail")
 depends=("gpgme" "ncurses" "db" "mime-types")
-source=("ftp://ftp.mutt.org/mutt/${pkgname}-${pkgver}.tar.gz"
-        "ignore-thread-1.5.21.patch")
+source=("https://bitbucket.org/${pkgname}/{$pkgname}/downloads/${pkgname}-${pkgver}.tar.gz"
+        "patch-1.5.23.sidebar.20140412.txt")
 sha1sums=("8ac821d8b1e25504a31bf5fda9c08d93a4acc862"
-          "e414b00fe5b9decfb7644935224b22520128bec7")
+          "8b86f148d8e1a0b37b0b77268349f4c94e797561")
 
 groups=("custom_packages")
 
 install="install"
 
-build() {
+prepare() {
     cd "${srcdir}/${pkgname}-${pkgver}"
 
-    patch -p1 -i "${srcdir}"/ignore-thread-1.5.21.patch
+    # sidebar patch
+    patch -p1 -i "${srcdir}"/patch-1.5.23.sidebar.20140412.txt
+
+    # fix automake issue
+    autoreconf -vfi
+}
+
+build() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
 
     ./configure \
         --prefix=/usr \
@@ -58,8 +65,11 @@ package() {
     cd "${srcdir}/${pkgname}-${pkgver}"
     make DESTDIR="${pkgdir}" install
 
+    # remove unnecessary or conflicting files
     rm "${pkgdir}"/etc/mime.types{,.dist}
     rm "${pkgdir}"/usr/bin/{flea,muttbug}
     rm "${pkgdir}"/usr/share/man/man1/{flea,muttbug}.1
+
+    # install Muttrc.gpg file
     install -Dm644 contrib/gpg.rc "${pkgdir}"/etc/Muttrc.gpg.dist
 }
