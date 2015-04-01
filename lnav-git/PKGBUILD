@@ -22,7 +22,7 @@ pkgver() {
 
 build() {
     cd "$pkgname"
-    ./configure --prefix=/usr
+    ./configure --prefix=/usr --disable-static
     make PREFIX=/usr DESTDIR="$pkgdir"
 }
 
