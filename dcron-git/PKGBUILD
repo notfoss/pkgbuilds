@@ -3,7 +3,7 @@
 
 pkgname="dcron-git"
 pkgver="4.5.r7.gbccc0e8"
-pkgrel="1"
+pkgrel="2"
 pkgdesc="dillon's lightweight cron daemon (Git version)."
 arch=("i686" "x86_64")
 license=("GPL")
@@ -14,7 +14,7 @@ makedepends=("git")
 optdepends=("msmtp-mta: sending cron job output via email")
 provides=("cron")
 conflicts=("cron")
-source=("$pkgname"::"git://github.com/dubiousjim/dcron.git"
+source=("$pkgname"::"git+https://github.com/dubiousjim/dcron.git"
         "service")
 md5sums=("SKIP"
         "2eefc422db24bf2ac38e3a16292ccdc4")
